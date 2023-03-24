@@ -1,0 +1,6 @@
+version: '3'
+services:
+  app:
+    image: sghadgedeqode/fast_api:1.0
+    ports:
+      - "8000:8000"
