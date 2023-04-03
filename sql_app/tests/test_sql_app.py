@@ -1,11 +1,10 @@
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import pytest
 
 from ..database import Base
 from ..main import app, get_db
-
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -53,13 +52,14 @@ def test_create_user_with_same_email(client):
     data = response.json()
     assert data["detail"] == "Email already registered"
 
+
 def test_login(client):
     response = client.post("/login/?email=example%40example.com&password=example")
     data = response.json()
     assert data["Details"] == "User logged in successfully"
 
+
 def test_login_invalid(client):
     response = client.post("/login/?email=example%40example.com&password=examples")
     data = response.json()
     assert data["Details"] == "Please enter valid credentials"
-
