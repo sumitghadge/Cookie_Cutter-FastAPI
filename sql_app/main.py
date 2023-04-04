@@ -1,3 +1,7 @@
+import os
+
+from celery import Celery
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
@@ -7,6 +11,18 @@ from .database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+
+load_dotenv(".env")
+
+celery = Celery(__name__)
+celery.conf.broker_url = os.environ.get("CELERY_BROKER_URL")
+celery.conf.result_backend = os.environ.get("CELERY_RESULT_BACKEND")
+
+
+@celery.task(name="create_task")
+def create_task():
+    return "This task is from celery"
 
 
 # Dependency
@@ -26,9 +42,7 @@ def sign_up(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@app.post(
-    "/login/",
-)
+@app.post("/login/")
 def login(email: str, password: str, db: Session = Depends(get_db)):
     db_user = crud.validate_credentials(db, email=email, password=password)
     if db_user is None:
