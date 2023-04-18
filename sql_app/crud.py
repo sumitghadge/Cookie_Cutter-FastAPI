@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from . import models, schemas
+from . import models
 
 
 def get_user_by_email(db: Session, email: str):
@@ -15,10 +15,10 @@ def validate_credentials(db: Session, email: str, password: str):
     )
 
 
-def create_user(db: Session, user: schemas.UserCreate):
-    fake_hashed_password = user.password
+def create_user(db: Session, user: dict):
+    fake_hashed_password = user["password"]
     db_user = models.User(
-        name=user.name, email=user.email, hashed_password=fake_hashed_password
+        name=user["name"], email=user["email"], hashed_password=fake_hashed_password
     )
     db.add(db_user)
     db.commit()

@@ -29,11 +29,12 @@ jobs:
         pip install flake8 pytest black isort
         pip install -r requirements.txt
 
-    # -name : Linting
-    #   run: |
-    #     black .
-    #     isort .
-    #     flake8 .
+    - name: Linting
+      run: |
+        black .
+        isort .
+        flake8 . --ignore=E722
+
     - name: Test with pytest
       run: |
         pytest
