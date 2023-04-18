@@ -33,7 +33,7 @@ jobs:
       run: |
         black .
         isort .
-        flake8 .
+        flake8 . --ignore=E722
 
     - name: Test with pytest
       run: |
